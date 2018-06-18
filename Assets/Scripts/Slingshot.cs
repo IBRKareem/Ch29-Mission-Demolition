@@ -3,21 +3,39 @@
 using System.Collections;
 
 
-
 public class Slingshot : MonoBehaviour {
 
-	public GameObject         launchPoint;
+	// fields set in the Unity Inspector pane
 
+	[Header("Set in Inspector")]                                            // a
+
+	public GameObject          prefabProjectile;
+
+
+
+	// fields set dynamically
+
+	[Header("Set Dynamically")]                                             // a
+
+	public GameObject          launchPoint;
+
+	public Vector3             launchPos;                                   // b
+
+	public GameObject          projectile;                                  // b
+
+	public bool                aimingMode;                                  // b
 
 
 
 	void Awake() {
 
-		Transform launchPointTrans = transform.Find("LaunchPoint");              // a
+		Transform launchPointTrans = transform.Find("LaunchPoint");
 
 		launchPoint = launchPointTrans.gameObject;
 
-		launchPoint.SetActive( false );                                          // b
+		launchPoint.SetActive( false );
+
+		launchPos = launchPointTrans.position;                              // c
 
 	}
 
@@ -41,6 +59,24 @@ public class Slingshot : MonoBehaviour {
 
 	}
 
+	void OnMouseDown() {                                                    // d
 
+		// The player has pressed the mouse button while over Slingshot
+
+		aimingMode = true;
+
+		// Instantiate a Projectile
+
+		projectile = Instantiate( prefabProjectile ) as GameObject;
+
+		// Start it at the launchPoint
+
+		projectile.transform.position = launchPos;
+
+		// Set it to isKinematic for now
+
+		projectile.GetComponent<Rigidbody>().isKinematic = true;
+
+	}
 
 }
